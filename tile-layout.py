@@ -1,14 +1,9 @@
-# This is an attempt to create a grid of a room, calculate grout lines base on tile sizes
-# and be able to find out the optimal starting size so that there are limited silver cuts
-# It is currently manual by adjusting the size of the offset for x,y
-# TODO -- automatically calculate the optimal first row of tiles
-
-
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
 # Function to visualize the room with tiles and output the dimensions of all tiles
-def visualize_room(room_length, room_width, tile_length, tile_width, points, offset_x=0, offset_y=0):
+def visualize_room(room_length, room_width, tile_length, tile_width, points, point_labels, offset_x=0, offset_y=0):
     fig, ax = plt.subplots()
     ax.set_xlim(0, room_length)
     ax.set_ylim(0, room_width)
@@ -54,9 +49,10 @@ def visualize_room(room_length, room_width, tile_length, tile_width, points, off
             x += tile_length
         y += tile_width
 
-    # Plot the points
-    for point in points:
+    # Plot the points and their labels
+    for point, label in zip(points, point_labels):
         plt.plot(point[0], point[1], 'ro')  # Mark the points with red circles
+        plt.text(point[0], point[1], label, color='black', fontsize=8, ha='right', va='bottom')
 
     plt.gca().set_aspect('equal', adjustable='box')
     plt.show()
@@ -89,10 +85,21 @@ points = [
     (49.5, room_width),#shower
     (49.5, room_width - 38), #shower corner
     (room_length, room_width - 31.5), #entry door wall
-    (room_length, room_width - 91),  #door toliet
+    (room_length, room_width - 91),  #door toilet
     (room_length-72, 54), #door toilet
     (114,0), # end of wall toilet
     (0,19) # vanity
+]
+
+# Labels for the points
+point_labels = [
+    "Shower",
+    "Shower Corner",
+    "Entry Door Wall",
+    "Door Toilet",
+    "Door Toilet",
+    "End of Wall Toilet",
+    "Vanity"
 ]
 
 # Hardcoded offsets for the first row and first column
@@ -100,4 +107,4 @@ offset_x = 12
 offset_y = 1
 
 # Visualize the room with the tiles and output the dimensions of all tiles
-visualize_room(room_length, room_width, tile_length, tile_width, points, offset_x, offset_y)
+visualize_room(room_length, room_width, tile_length, tile_width, points, point_labels, offset_x, offset_y)
